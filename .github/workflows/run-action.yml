@@ -16,9 +16,10 @@ on:
 
   release:
     types: [published, created, edited]
-    step:
+    steps:
       - name: Get Current Time
         uses: 1466587594/get-current-time@v2.0.0
+        id: current-time
         with:
           format: YYYYMMDD-HH
           utcOffset: "+01:00"
