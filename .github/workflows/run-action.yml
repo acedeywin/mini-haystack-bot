@@ -22,7 +22,7 @@ on:
         id: current-time
         with:
           format: YYYYMMDD-HH
-          utcOffset: "+08:00"
+          utcOffset: "+01:00"
 
       - name: Use current time
         env:
