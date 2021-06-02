@@ -30,6 +30,9 @@ jobs:
       - if: github.event == 'push'
         run: sleep 15
 
+      - if: github.event == 'pull request'
+      - run: sleep 18
+
       - name: Get Current Time
         uses: 1466587594/get-current-time@v2.0.0
         id: current-time
@@ -37,12 +40,12 @@ jobs:
           format: YYYYMMDD-HH
           utcOffset: "+01:00"
 
-      - if: github.event == 'pull request'
       - name: Use current time
         env:
           TIME: "${{ steps.current-time.outputs.second }}"
+
+      - if: github.event == 'pull request'
       - run: echo "The CI took ${{$TIME}} seconds"
-      - run: sleep 18
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
