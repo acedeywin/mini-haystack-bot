@@ -27,15 +27,15 @@ jobs:
       - name: Setup repo
         uses: actions/checkout@v2
         
-      - id: Sleep Randomly
-        run: echo "PROCEED=$((RANDOM%2))" >> sleep 15
-        shell: bash
+#       - id: Sleep Randomly
+#         run: echo "PROCEED=$((RANDOM%2))" >> sleep 15
+#         shell: bash
       
       - if: github.event == 'push'
-        run: env.PROCEED
+        run: sleep 15
         
       - if: github.event == 'pull request'
-        run: env.PROCEED
+        run: sleep 18
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
