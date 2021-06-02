@@ -14,6 +14,23 @@ on:
   pull_request:
     branches: [master]
 
+  release:
+    types: [published, created, edited]
+    step:
+      - name: Get Current Time
+        uses: 1466587594/get-current-time@v2.0.0
+        with:
+          format: YYYYMMDD-HH
+          utcOffset: "+01:00"
+
+      - name: Use current time
+        env:
+          TIME: "${{ steps.current-time.outputs.second }}"
+          if: ${{github.event.issue.pull_request}}
+          runs-on: ubuntu-latest
+          steps:
+            - run: echo "The CI took ${{$TIME}} seconds"
+
 jobs:
   build:
     runs-on: ubuntu-latest # runs a test on Ubuntu, Windows and macOS
@@ -26,14 +43,10 @@ jobs:
     steps:
       - name: Setup repo
         uses: actions/checkout@v2
-        
-#       - id: Sleep Randomly
-#         run: echo "PROCEED=$((RANDOM%2))" >> sleep 15
-#         shell: bash
-      
+
       - if: github.event == 'push'
         run: sleep 15
-        
+
       - if: github.event == 'pull request'
         run: sleep 18
 
