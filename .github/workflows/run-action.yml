@@ -29,7 +29,11 @@ jobs:
 
       - if: github.event == 'push'
         run: sleep 15
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 271397c85e91e8b77e724d4eedfebc8d988e4d30
       - name: Add PR comment
         uses: 1466587594/get-current-time@v2.0.0
         id: current-time
@@ -37,8 +41,13 @@ jobs:
           format: YYYYMMDD-HH
           utcOffset: "+01:00"
         env:
+<<<<<<< HEAD
           TIME: "${{ steps.current-time.outputs.second }}"
 
+=======
+         TIME: "${{ steps.current-time.outputs.second }}"
+        
+>>>>>>> 271397c85e91e8b77e724d4eedfebc8d988e4d30
       - if: github.event == 'pull request'
         run: echo "The CI took ${{env.TIME}} seconds"
 
