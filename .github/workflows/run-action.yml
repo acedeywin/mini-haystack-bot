@@ -40,7 +40,7 @@ jobs:
          TIME: "${{ steps.current-time.outputs.second }}"
         
       - if: github.event == 'pull request'
-        run: echo "The CI took ${{$TIME}} seconds"
+        run: echo "The CI took ${{env.TIME}} seconds"
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
