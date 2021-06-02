@@ -1,6 +1,10 @@
 # mini-haystack-ts
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that A bot that listens to pull request and add a new label/commit to it as well as automate workflow.
+> A GitHub App built with [Probot](https://github.com/probot/probot) that listens to pull request and add a new label/commit to it as well as automate workflow.
+
+## How it works
+
+When a pull request (PR) is opened, the bot checks if the PR title contains the word "Hackstack". If it does, a "Haystack" label is added to the PR. It also calculates the average pull request size of the repository where the bot was installed and compares it with the current pull request size, subsequently adding a comparison comment to the PR. When a PR is closed, a comment is added automatically telling the user how long the PR took to be completed.
 
 ## Setup
 
@@ -12,7 +16,7 @@ npm install
 npm start
 ```
 
-## Docker
+<!-- ## Docker
 
 ```sh
 # 1. Build container
@@ -20,7 +24,7 @@ docker build -t mini-haystack-ts .
 
 # 2. Start container
 docker run -e APP_ID=<app-id> -e PRIVATE_KEY=<pem-value> mini-haystack-ts
-```
+``` -->
 
 ## Contributing
 
