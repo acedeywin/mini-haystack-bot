@@ -31,6 +31,7 @@ jobs:
         run: sleep 15
 
       - if: github.event == 'pull request'
+      - name: Add PR comment
         uses: 1466587594/get-current-time@v2.0.0
         id: current-time
         with:
@@ -38,7 +39,7 @@ jobs:
           utcOffset: "+01:00"
         env:
           TIME: "${{ steps.current-time.outputs.second }}"
-        run: echo "The CI took ${{$TIME}} seconds"
+      - run: echo "The CI took ${{$TIME}} seconds"
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
