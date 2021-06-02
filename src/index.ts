@@ -3,6 +3,7 @@ import { Probot } from "probot"
 export = (app: Probot) => {
   const openPR = "pull_request.opened"
 
+  //Add the label "Haystack" to the pull request if PR has the title "Haystack"
   app.on(openPR, async context => {
     try {
       const pullRequest = context.payload.pull_request
@@ -21,6 +22,7 @@ export = (app: Probot) => {
     }
   })
 
+  //Calculate the average pull request size to the repository and add a comment to the pull request automatically
   app.on(openPR, async context => {
     try {
       const owner = context.payload.repository.owner.login
@@ -66,6 +68,7 @@ export = (app: Probot) => {
     }
   })
 
+  //Add comment automatically to closed PR
   app.on("pull_request.closed", async context => {
     try {
       if (context.payload.pull_request.merged) {
