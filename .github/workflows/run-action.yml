@@ -21,7 +21,7 @@ on:
         uses: 1466587594/get-current-time@v2.0.0
         with:
           format: YYYYMMDD-HH
-          utcOffset: "+01:00"
+          utcOffset: "+08:00"
 
       - name: Use current time
         env:
