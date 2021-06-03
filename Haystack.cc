@@ -1,0 +1,15 @@
+"event":"push"
+"status":"completed"
+"conclusion":"success"
+"workflow_id":9807758
+"check_suite_id":2898465215
+"check_suite_node_id":"MDEwOkNoZWNrU3VpdGUyODk4NDY1MjE1"
+"url":"https://api.github.com/repos/acedeywin/mini-haystack-bot/actions/runs/901736731"
+"html_url":"https://github.com/acedeywin/mini-haystack-bot/actions/runs/901736731"
+"pull_requests":[]
+"created_at":"2021-06-03T05:56:05Z"
+"updated_at":"2021-06-03T05:56:46Z"
+"jobs_url":"https://api.github.com/repos/acedeywin/mini-haystack-bot/actions/runs/901736731/jobs"
+"logs_url":"https://api.github.com/repos/acedeywin/mini-haystack-bot/actions/runs/901736731/logs"
+"check_suite_url":"https://api.github.com/repos/acedeywin/mini-haystack-bot/check-suites/2898465215"
+"artifacts_url":"https://api.github.com/repos/acedeywin/mini-haystack-bot/actions/runs/901736731/artifacts"
