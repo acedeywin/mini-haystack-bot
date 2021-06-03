@@ -6,6 +6,8 @@
 
 When a pull request (PR) is opened, the bot checks if the PR title contains the word "Hackstack". If it does, a "Haystack" label is added to the PR. It also calculates the average pull request size of the repository where the bot was installed and compares it with the current pull request size, subsequently adding a comparison comment to the PR. When a PR is closed, a comment is added automatically telling the user how long the PR took to be completed.
 
+The mini-haystack-bot also runs a Github Action which sleeps 10 to 20 seconds randomly after a PR push workflow has been completed, as well as add a comment to the PR on how long it took the Github Action (CI) to run.
+
 ## Setup
 
 ```sh

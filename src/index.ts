@@ -1,10 +1,33 @@
 import { Probot } from "probot"
+import { timeDifference } from "./utils"
 
 export = (app: Probot) => {
-  const openPR = "pull_request.opened"
+  const openedPR = "pull_request.opened"
+  const closedPR = "pull_request.closed"
+  const completedWorkflowRun = "workflow_run.completed"
+  const editedpR = "pull_request.edited"
 
   //Add the label "Haystack" to the pull request if PR has the title "Haystack"
-  app.on(openPR, async context => {
+  app.on(openedPR, async context => {
+    try {
+      const pullRequest = context.payload.pull_request
+
+      let labels: any
+
+      pullRequest.title.includes("Haystack")
+        ? (labels = ["Haystack"])
+        : (labels = null)
+
+      const addLabelToPR = context.issue({ labels })
+
+      return await context.octokit.issues.addLabels(addLabelToPR)
+    } catch (error) {
+      throw error
+    }
+  })
+
+  //Add the label "Haystack" to an edited pull request if PR has the title "Haystack"
+  app.on(editedpR, async context => {
     try {
       const pullRequest = context.payload.pull_request
 
@@ -23,7 +46,7 @@ export = (app: Probot) => {
   })
 
   //Calculate the average pull request size to the repository and add a comment to the pull request automatically
-  app.on(openPR, async context => {
+  app.on(openedPR, async context => {
     try {
       const owner = context.payload.repository.owner.login
       const repo = context.payload.repository.name
@@ -69,25 +92,11 @@ export = (app: Probot) => {
   })
 
   //Add comment automatically to closed PR
-  app.on("pull_request.closed", async context => {
+  app.on(closedPR, async context => {
     try {
       if (context.payload.pull_request.merged) {
         const closedAt: any = context.payload.pull_request.closed_at
         const createdAt = context.payload.pull_request.created_at
-
-        const timeDifference = (createdAt: string, closedAt: string) => {
-          const a = new Date(createdAt).getTime()
-          const b = new Date(closedAt).getTime()
-
-          const milliseconds = b - a
-          const minutes = Math.round(milliseconds / 60 / 1000)
-          const hours = Math.round(milliseconds / 3600 / 1000)
-          const newMinutes = minutes - 60 * hours
-
-          return hours > 0
-            ? `${hours} hours ${newMinutes} minutes`
-            : `${newMinutes} minutes`
-        }
 
         const addTimeDifference = context.issue({
           body: `This pr took ${timeDifference(
@@ -97,6 +106,42 @@ export = (app: Probot) => {
         })
 
         return await context.octokit.issues.createComment(addTimeDifference)
+      }
+    } catch (error) {
+      throw error
+    }
+  })
+
+  //Sleeps 10 to 20 seconds randomly after pull request push
+  app.on(completedWorkflowRun, async context => {
+    const updatedAt: any = context.payload.workflow_run?.updated_at
+    const randomNumber = Math.floor(Math.random() * 19) + 10
+    const time: any = randomNumber * 1000
+
+    if (
+      context.payload.workflow_run?.event === "push" &&
+      context.payload.workflow_run?.updated_at === updatedAt
+    ) {
+      return await new Promise(resolve => setTimeout(resolve, time))
+    }
+    console.log(`Slept for ${time} seconds`)
+  })
+
+  //Add a comment to the PR everytime the CI runs
+  app.on(completedWorkflowRun, async context => {
+    try {
+      const createdAt: any = context.payload.workflow_run?.created_at
+      const updatedAt: any = context.payload.workflow_run?.updated_at
+      const id = context.payload.workflow_run?.id
+
+      if (context.payload.workflow_run?.event === "pull_request") {
+        app.on(closedPR, async context => {
+          const CIRunsComment = context.issue({
+            body: `The CI ${id} took ${timeDifference(createdAt, updatedAt)}`,
+          })
+
+          return await context.octokit.issues.createComment(CIRunsComment)
+        })
       }
     } catch (error) {
       throw error
