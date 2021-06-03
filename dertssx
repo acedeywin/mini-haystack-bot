@@ -1,0 +1,20 @@
+case rule. · 57. JS is used outside browsers. · 9. The question was: "Is there a simple ...
+61 answers
+ 
+·
+ 
+823 votes: 
+Try this: function toTitleCase(str) { return str.replace( /\w\S*/g, function(txt) ...
+Convert JavaScript String to be all lower case ...
+15 answers
+30 Sep 2008
+Convert string to sentence case in javascript ...
+10 answers
+30 Sep 2013
+How do I make the first letter of a string uppercase ...
+104 answers
+15 Aug 2016
+How to convert any type of text into Toggle Case by ...
+3 answers
+28 Jan 2020
+More results from stackoverflow.com
