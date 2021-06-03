@@ -14,13 +14,15 @@ export = (app: Probot) => {
 
       let labels: any
 
-      if (pullRequest.title.includes("Haystack")) {
-        labels = ["Haystack"]
-      }
+      pullRequest.title.includes("Haystack")
+        ? (labels = ["Haystack"])
+        : (labels = null)
 
       const addLabelToPR = context.issue({ labels })
 
-      return await context.octokit.issues.addLabels(addLabelToPR)
+      return labels !== null
+        ? await context.octokit.issues.addLabels(addLabelToPR)
+        : null
     } catch (error) {
       throw error
     }
@@ -33,13 +35,15 @@ export = (app: Probot) => {
 
       let labels: any
 
-      if (pullRequest.title.includes("Haystack")) {
-        labels = ["Haystack"]
-      }
+      pullRequest.title.includes("Haystack")
+        ? (labels = ["Haystack"])
+        : (labels = null)
 
       const addLabelToPR = context.issue({ labels })
 
-      return await context.octokit.issues.addLabels(addLabelToPR)
+      return labels !== null
+        ? await context.octokit.issues.addLabels(addLabelToPR)
+        : null
     } catch (error) {
       throw error
     }
