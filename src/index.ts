@@ -14,9 +14,9 @@ export = (app: Probot) => {
 
       let labels: any
 
-      pullRequest.title.includes("Haystack")
-        ? (labels = ["Haystack"])
-        : (labels = null)
+      if (pullRequest.title.includes("Haystack")) {
+        labels = ["Haystack"]
+      }
 
       const addLabelToPR = context.issue({ labels })
 
@@ -33,9 +33,9 @@ export = (app: Probot) => {
 
       let labels: any
 
-      pullRequest.title.includes("Haystack")
-        ? (labels = ["Haystack"])
-        : (labels = null)
+      if (pullRequest.title.includes("Haystack")) {
+        labels = ["Haystack"]
+      }
 
       const addLabelToPR = context.issue({ labels })
 
