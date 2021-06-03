@@ -1,4 +1,4 @@
-export const timeDifference = (createdAt: string, closedAt: string) => {
+export const timeDifference = async (createdAt: string, closedAt: string) => {
   const a = new Date(createdAt).getTime()
   const b = new Date(closedAt).getTime()
 

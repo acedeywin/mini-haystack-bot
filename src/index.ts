@@ -14,6 +14,7 @@ export = (app: Probot) => {
 
       let labels: any
 
+      pullRequest.title.includes("haystack") ||
       pullRequest.title.includes("Haystack")
         ? (labels = ["Haystack"])
         : (labels = null)
@@ -35,6 +36,7 @@ export = (app: Probot) => {
 
       let labels: any
 
+      pullRequest.title.includes("haystack") ||
       pullRequest.title.includes("Haystack")
         ? (labels = ["Haystack"])
         : (labels = null)
@@ -103,7 +105,7 @@ export = (app: Probot) => {
         const createdAt = context.payload.pull_request.created_at
 
         const addTimeDifference = context.issue({
-          body: `This pr took ${timeDifference(
+          body: `This pr took ${await timeDifference(
             createdAt,
             closedAt
           )} to complete`,
@@ -138,10 +140,13 @@ export = (app: Probot) => {
       const updatedAt: any = context.payload.workflow_run?.updated_at
       const id = context.payload.workflow_run?.id
 
-      if (context.payload.workflow_run?.event === "pull_request") {
+      if (context.payload.action === "completed") {
         app.on(closedPR, async context => {
           const CIRunsComment = context.issue({
-            body: `The CI ${id} took ${timeDifference(createdAt, updatedAt)}`,
+            body: `The CI ${id} took ${await timeDifference(
+              createdAt,
+              updatedAt
+            )}`,
           })
 
           return await context.octokit.issues.createComment(CIRunsComment)
