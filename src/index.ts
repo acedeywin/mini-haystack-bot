@@ -12,16 +12,10 @@ export = (app: Probot) => {
     try {
       const pullRequest = context.payload.pull_request
       const checkLowerCase = await lowerCase(pullRequest.title)
-
-      let labels: any
-
-      checkLowerCase.includes("haystack")
-        ? (labels = ["Haystack"])
-        : (labels = null)
-
+      const labels = ["Haystack"]
       const addLabelToPullRequest = context.issue({ labels })
 
-      return labels !== null
+      return checkLowerCase.includes("haystack")
         ? await context.octokit.issues.addLabels(addLabelToPullRequest)
         : null
     } catch (error) {
@@ -34,16 +28,10 @@ export = (app: Probot) => {
     try {
       const pullRequest = context.payload.pull_request
       const checkLowerCase = await lowerCase(pullRequest.title)
-
-      let labels: any
-
-      checkLowerCase.includes("haystack")
-        ? (labels = ["Haystack"])
-        : (labels = null)
-
+      const labels = ["Haystack"]
       const addLabelToPullRequest = context.issue({ labels })
 
-      return labels !== null
+      return checkLowerCase.includes("haystack")
         ? await context.octokit.issues.addLabels(addLabelToPullRequest)
         : null
     } catch (error) {
@@ -100,19 +88,18 @@ export = (app: Probot) => {
   //Add comment automatically to closed PR
   app.on(closedPullRequest, async context => {
     try {
-      if (context.payload.pull_request.merged) {
-        const closedAt: any = context.payload.pull_request.closed_at
-        const createdAt = context.payload.pull_request.created_at
+      const closedAt: any = context.payload.pull_request.closed_at
+      const createdAt = context.payload.pull_request.created_at
 
-        const addTimeDifference = context.issue({
-          body: `This pr took ${await timeDifference(
-            createdAt,
-            closedAt
-          )} to complete`,
-        })
-
-        return await context.octokit.issues.createComment(addTimeDifference)
-      }
+      const addTimeDifference = context.issue({
+        body: `This pr took ${await timeDifference(
+          createdAt,
+          closedAt
+        )} to complete`,
+      })
+      return context.payload.pull_request.merged
+        ? await context.octokit.issues.createComment(addTimeDifference)
+        : null
     } catch (error) {
       throw error
     }
@@ -124,13 +111,12 @@ export = (app: Probot) => {
     const randomNumber = Math.floor(Math.random() * 19) + 10
     const time: any = randomNumber * 1000
 
-    if (
-      context.payload.workflow_run?.event === "push" &&
-      context.payload.workflow_run?.updated_at === updatedAt
-    ) {
-      return await new Promise(resolve => setTimeout(resolve, time))
-    }
     console.log(`Slept for ${time} seconds`)
+
+    return context.payload.workflow_run?.event === "push" &&
+      context.payload.workflow_run?.updated_at === updatedAt
+      ? await new Promise(resolve => setTimeout(resolve, time))
+      : null
   })
 
   //Add a comment to the PR everytime the CI runs
@@ -140,18 +126,18 @@ export = (app: Probot) => {
       const updatedAt: any = context.payload.workflow_run?.updated_at
       const id = context.payload.workflow_run?.id
 
-      if (context.payload.action === "completed") {
-        app.on(closedPullRequest, async context => {
-          const CIRunsComment = context.issue({
-            body: `The CI ${id} took ${await timeDifference(
-              createdAt,
-              updatedAt
-            )}`,
-          })
+      return context.payload.action === "completed"
+        ? app.on(closedPullRequest, async context => {
+            const CIRunsComment = context.issue({
+              body: `The CI ${id} took ${await timeDifference(
+                createdAt,
+                updatedAt
+              )}`,
+            })
 
-          return await context.octokit.issues.createComment(CIRunsComment)
-        })
-      }
+            return await context.octokit.issues.createComment(CIRunsComment)
+          })
+        : null
     } catch (error) {
       throw error
     }
