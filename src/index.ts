@@ -1,28 +1,28 @@
 import { Probot } from "probot"
-import { timeDifference } from "./utils"
+import { timeDifference, lowerCase } from "./utils"
 
 export = (app: Probot) => {
-  const openedPR = "pull_request.opened"
-  const closedPR = "pull_request.closed"
+  const openedPullRequest = "pull_request.opened"
+  const closedPullRequest = "pull_request.closed"
   const completedWorkflowRun = "workflow_run.completed"
-  const editedpR = "pull_request.edited"
+  const editedPullRequest = "pull_request.edited"
 
   //Add the label "Haystack" to the pull request if PR has the title "Haystack"
-  app.on(openedPR, async context => {
+  app.on(openedPullRequest, async context => {
     try {
       const pullRequest = context.payload.pull_request
+      const checkLowerCase = await lowerCase(pullRequest.title)
 
       let labels: any
 
-      pullRequest.title.includes("haystack") ||
-      pullRequest.title.includes("Haystack")
+      checkLowerCase.includes("haystack")
         ? (labels = ["Haystack"])
         : (labels = null)
 
-      const addLabelToPR = context.issue({ labels })
+      const addLabelToPullRequest = context.issue({ labels })
 
       return labels !== null
-        ? await context.octokit.issues.addLabels(addLabelToPR)
+        ? await context.octokit.issues.addLabels(addLabelToPullRequest)
         : null
     } catch (error) {
       throw error
@@ -30,21 +30,21 @@ export = (app: Probot) => {
   })
 
   //Add the label "Haystack" to an edited pull request if PR has the title "Haystack"
-  app.on(editedpR, async context => {
+  app.on(editedPullRequest, async context => {
     try {
       const pullRequest = context.payload.pull_request
+      const checkLowerCase = await lowerCase(pullRequest.title)
 
       let labels: any
 
-      pullRequest.title.includes("haystack") ||
-      pullRequest.title.includes("Haystack")
+      checkLowerCase.includes("haystack")
         ? (labels = ["Haystack"])
         : (labels = null)
 
-      const addLabelToPR = context.issue({ labels })
+      const addLabelToPullRequest = context.issue({ labels })
 
       return labels !== null
-        ? await context.octokit.issues.addLabels(addLabelToPR)
+        ? await context.octokit.issues.addLabels(addLabelToPullRequest)
         : null
     } catch (error) {
       throw error
@@ -52,7 +52,7 @@ export = (app: Probot) => {
   })
 
   //Calculate the average pull request size to the repository and add a comment to the pull request automatically
-  app.on(openedPR, async context => {
+  app.on(openedPullRequest, async context => {
     try {
       const owner = context.payload.repository.owner.login
       const repo = context.payload.repository.name
@@ -98,7 +98,7 @@ export = (app: Probot) => {
   })
 
   //Add comment automatically to closed PR
-  app.on(closedPR, async context => {
+  app.on(closedPullRequest, async context => {
     try {
       if (context.payload.pull_request.merged) {
         const closedAt: any = context.payload.pull_request.closed_at
@@ -141,7 +141,7 @@ export = (app: Probot) => {
       const id = context.payload.workflow_run?.id
 
       if (context.payload.action === "completed") {
-        app.on(closedPR, async context => {
+        app.on(closedPullRequest, async context => {
           const CIRunsComment = context.issue({
             body: `The CI ${id} took ${await timeDifference(
               createdAt,

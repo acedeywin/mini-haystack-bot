@@ -25,3 +25,9 @@ export const timeDifference = async (createdAt: string, closedAt: string) => {
   }
   return time
 }
+
+export const lowerCase = async (value: string) => {
+  const text = value.toLowerCase()
+
+  return text
+}
