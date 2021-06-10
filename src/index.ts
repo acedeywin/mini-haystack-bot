@@ -45,9 +45,12 @@ export = (app: Probot) => {
       const owner = context.payload.repository.owner.login
       const repo = context.payload.repository.name
 
-      const listPR = await context.octokit.rest.pulls.list({ owner, repo })
+      const listPullRequest = await context.octokit.rest.pulls.list({
+        owner,
+        repo,
+      })
 
-      const size = listPR.data.map(list => {
+      const size = listPullRequest.data.map(list => {
         return list.number
       })
 
@@ -128,14 +131,14 @@ export = (app: Probot) => {
 
       return context.payload.action === "completed"
         ? app.on(closedPullRequest, async context => {
-            const CIRunsComment = context.issue({
+            const comment = context.issue({
               body: `The CI ${id} took ${await timeDifference(
                 createdAt,
                 updatedAt
               )}`,
             })
 
-            return await context.octokit.issues.createComment(CIRunsComment)
+            return await context.octokit.issues.createComment(comment)
           })
         : null
     } catch (error) {
