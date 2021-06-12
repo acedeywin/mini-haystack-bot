@@ -1,6 +1,6 @@
 # mini-haystack-ts
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that listens to pull request and add a new label/commit to it as well as automate workflow.
+> A GitHub App built with [Probot](https://github.com/probot/probot) that listens to pull request and add a new label/comment to it as well as automate workflow.
 
 ## How it works
 
